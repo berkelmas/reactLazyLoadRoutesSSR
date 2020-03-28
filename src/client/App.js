@@ -1,3 +1,4 @@
+import '@babel/polyfill'
 import React from 'react'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import loadable from '@loadable/component'
@@ -9,6 +10,14 @@ import {
   Route,
   Link,
 } from 'react-router-dom'
+import { renderRoutes } from 'react-router-config'
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+// REDUX DEV-TOOLS EXTENSION PLUGIN
+import { composeWithDevTools } from 'redux-devtools-extension'
+import reducers from '../client/store/reducers/index'
+import { aLoadData } from './letters/A'
 
 const A = loadable(() => import('./letters/A'))
 const B = loadable(() => import('./letters/B'))
@@ -60,32 +69,35 @@ const Moment = loadable.lib(() => import('moment'))
 // )
 
 let App
+export const routes = [
+  {
+    path: '/a',
+    component: A,
+    loadData: aLoadData,
+  },
+  {
+    path: '/b',
+    component: B,
+  },
+]
 
 if (typeof window !== 'undefined') {
-  App = () => (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/a">
-          <A />
-        </Route>
-        <Route path="/b">
-          <B />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+  const store = createStore(
+    reducers,
+    composeWithDevTools(applyMiddleware(thunk)),
+  )
+  App = props => (
+    <Provider store={store}>
+      <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
+    </Provider>
   )
 } else {
   App = props => (
-    <StaticRouter context={{}} location={props.location}>
-      <Switch>
-        <Route path="/a">
-          <A />
-        </Route>
-        <Route path="/b">
-          <B />
-        </Route>
-      </Switch>
-    </StaticRouter>
+    <Provider store={props.store}>
+      <StaticRouter context={{}} location={props.location}>
+        {renderRoutes(routes)}
+      </StaticRouter>
+    </Provider>
   )
 }
 
