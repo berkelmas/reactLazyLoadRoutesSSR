@@ -1,35 +1,23 @@
-# Get the SSR example running
-
 Steps:
 
 1. Download repository
 
 ```bash
-git clone https://github.com/gregberge/loadable-components.git
+git clone https://github.com/berkelmas/reactLazyLoadRoutesSSR
 ```
 
-2. move into example directory
+2. install [https://yarnpkg.com/lang/en/docs/install](yarn) if haven't already
+3. install project dependencies
 
 ```bash
-cd ./loadable-components/examples/server-side-rendering
-```
-
-3. install [https://yarnpkg.com/lang/en/docs/install](yarn) if haven't already
-4. install project dependencies
-
-```bash
-yarn
+npm install
 ```
 
 5. run locally or build and serve
 
 ```bash
-yarn dev
-
-# Or
-
-yarn build
-yarn start
+npm run build
+npm run dev
 ```
 
 🍻
